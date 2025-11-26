@@ -1,10 +1,6 @@
-# Astro Starter Kit: Minimal
+# Astro Webstack
 
-```sh
-npm create astro@latest -- --template minimal
-```
-
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+> 🧑‍🚀 This is the Astro port of WebStackPage. Special thanks to https://github.com/WebStackPage/WebStackPage.github.io.
 
 ## 🚀 Project Structure
 
