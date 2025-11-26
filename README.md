@@ -1,6 +1,6 @@
 # Astro Webstack
 
-> 🧑‍🚀 This is the Astro port of WebStackPage. Special thanks to https://github.com/WebStackPage/WebStackPage.github.io.
+> 🧑‍🚀 This is the Astro port of WebStackPage. Special thanks to https://github.com/WebStackPage/WebStackPage.github.io and to the [Trae](https://www.trae.cn/) for its support.
 
 ## 🚀 Project Structure
 
