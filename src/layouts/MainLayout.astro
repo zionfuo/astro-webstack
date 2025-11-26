@@ -1,0 +1,92 @@
+---
+const { lang = 'zh' } = Astro.props;
+---
+
+<html lang="{lang}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WebStack.cc - 设计师网址导航</title>
+    <link rel="shortcut icon" href="/assets/images/favicon.png">
+    <!-- 引入CSS文件 -->
+    <link rel="stylesheet" href="/assets/css/bootstrap.css">
+    <link rel="stylesheet" href="/assets/css/nav.css">
+    <link rel="stylesheet" href="/assets/css/xenon-components.css">
+    <link rel="stylesheet" href="/assets/css/xenon-core.css">
+    <link rel="stylesheet" href="/assets/css/xenon-forms.css">
+    <link rel="stylesheet" href="/assets/css/xenon-skins.css">
+    <link rel="stylesheet" href="/assets/css/xenon.css">
+    <link rel="stylesheet" href="/assets/css/fonts/elusive/css/elusive.css">
+    <link rel="stylesheet" href="/assets/css/fonts/fontawesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/assets/css/fonts/linecons/css/linecons.css">
+    <link rel="stylesheet" href="/assets/css/fonts/meteocons/css/meteocons.css">
+    <!-- 引入JavaScript文件 -->
+    <script is:inline src="/assets/js/jquery-1.11.1.min.js"></script>
+    <script is:inline src="/assets/js/bootstrap.min.js"></script>
+    <script>
+        // 确保DOM加载完成后初始化组件
+        $(document).ready(function() {
+            // 初始化dropdown组件
+            $('.dropdown-toggle').dropdown();
+            
+            // 实现平滑滚动功能
+            $('.smooth').click(function(e) {
+                e.preventDefault();
+                var target = $(this).attr('href');
+                if (target.startsWith('#')) {
+                    // 计算目标元素的位置
+                    var targetOffset = $(target).offset().top;
+                    // 平滑滚动到目标位置
+                    $('html, body').animate({
+                        scrollTop: targetOffset - 75 // 减去导航栏高度
+                    }, 800);
+                }
+            });
+        });
+    </script>
+    <script is:inline src="/assets/js/TweenMax.min.js"></script>
+    <script is:inline src="/assets/js/joinable.js"></script>
+    <script is:inline src="/assets/js/resizeable.js"></script>
+    <script is:inline src="/assets/js/lozad.js"></script>
+    <script>
+        // 初始化lozad.js懒加载
+        document.addEventListener('DOMContentLoaded', function() {
+            const observer = lozad();
+            observer.observe();
+        });
+    </script>
+    <script is:inline src="/assets/js/xenon-api.js"></script>
+    <script is:inline src="/assets/js/xenon-custom.js"></script>
+    <script is:inline src="/assets/js/xenon-toggles.js"></script>
+    <!-- 分析脚本 -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-111463289-1"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'UA-111463289-1');
+    </script>
+    <!-- 百度统计 -->
+    <script>
+        var _hmt = _hmt || [];
+        (function() {
+            var hm = document.createElement("script");
+            hm.src = "https://hm.baidu.com/hm.js?c05bb16ea908292af9f6c513087a1cc3";
+            var s = document.getElementsByTagName("script")[0]; 
+            s.parentNode.insertBefore(hm, s);
+        })();
+    </script>
+    <!-- Adsense -->
+    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <script>
+        (adsbygoogle = window.adsbygoogle || []).push({
+            google_ad_client: "ca-pub-8550836177608334",
+            enable_page_level_ads: true
+        });
+    </script>
+    <slot name="head"></slot>
+</head>
+<body>
+    <slot></slot>
+</body>
+</html>
