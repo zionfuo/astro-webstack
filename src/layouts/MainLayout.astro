@@ -1,14 +1,19 @@
 ---
-const { lang = 'zh' } = Astro.props;
+const {
+  lang = 'zh',
+  gaId = import.meta.env.PUBLIC_GA_ID || 'UA-111463289-1',
+  baiduHmId = import.meta.env.PUBLIC_BAIDU_HM_ID || 'c05bb16ea908292af9f6c513087a1cc3',
+  adClient = import.meta.env.PUBLIC_AD_CLIENT || 'ca-pub-8550836177608334',
+} = Astro.props;
 ---
 
+<!DOCTYPE html>
 <html lang={lang}>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>WebStack.cc - 设计师网址导航</title>
     <link rel="shortcut icon" href="/assets/images/favicon.png">
-    <!-- 引入CSS文件 -->
     <link rel="stylesheet" href="/assets/css/bootstrap.css">
     <link rel="stylesheet" href="/assets/css/nav.css">
     <link rel="stylesheet" href="/assets/css/xenon-components.css">
@@ -20,7 +25,6 @@ const { lang = 'zh' } = Astro.props;
     <link rel="stylesheet" href="/assets/css/fonts/fontawesome/css/font-awesome.min.css">
     <link rel="stylesheet" href="/assets/css/fonts/linecons/css/linecons.css">
     <link rel="stylesheet" href="/assets/css/fonts/meteocons/css/meteocons.css">
-    <!-- 引入JavaScript文件 -->
     <script is:inline src="/assets/js/jquery-1.11.1.min.js"></script>
     <script is:inline src="/assets/js/bootstrap.min.js"></script>
     <script is:inline>
@@ -48,29 +52,34 @@ const { lang = 'zh' } = Astro.props;
     <script is:inline src="/assets/js/xenon-api.js"></script>
     <script is:inline src="/assets/js/xenon-custom.js"></script>
     <script is:inline src="/assets/js/xenon-toggles.js"></script>
-    <!-- 分析脚本 -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-111463289-1"></script>
+    <!--
+        SRI (Subresource Integrity) Note:
+        Third-party tracking scripts (GA, Baidu, AdSense) are loaded dynamically
+        via inline script to handle variable IDs. For enhanced security, consider:
+        1. Using a CSP with 'strict-dynamic' for script sources
+        2. Deploying these through your own CDN with SRI hashes
+        3. Using service workers to validate external resources
+    -->
+    <script is:inline async src={`https://www.googletagmanager.com/gtag/js?id=${gaId}`}></script>
     <script is:inline>
         window.dataLayer = window.dataLayer || [];
         function gtag(){dataLayer.push(arguments);}
         gtag('js', new Date());
-        gtag('config', 'UA-111463289-1');
+        gtag('config', `${gaId}`);
     </script>
-    <!-- 百度统计 -->
     <script is:inline>
         var _hmt = _hmt || [];
         (function() {
             var hm = document.createElement("script");
-            hm.src = "https://hm.baidu.com/hm.js?c05bb16ea908292af9f6c513087a1cc3";
+            hm.src = `https://hm.baidu.com/hm.js?${baiduHmId}`;
             var s = document.getElementsByTagName("script")[0];
             s.parentNode.insertBefore(hm, s);
         })();
     </script>
-    <!-- Adsense -->
     <script is:inline async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
     <script is:inline>
         (adsbygoogle = window.adsbygoogle || []).push({
-            google_ad_client: "ca-pub-8550836177608334",
+            google_ad_client: `${adClient}`,
             enable_page_level_ads: true
         });
     </script>

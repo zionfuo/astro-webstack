@@ -1,0 +1,44 @@
+---
+const { lang = 'zh', baseUrl = '/cn' } = Astro.props;
+
+const labels = {
+  zh: { github: 'GitHub', currentLang: 'Chinese' },
+  en: { github: 'GitHub', currentLang: 'English' },
+};
+
+const t = labels[lang] || labels.zh;
+---
+
+<nav class="navbar user-info-navbar" role="navigation">
+    <ul class="user-info-menu left-links list-inline list-unstyled">
+        <li class="hidden-sm hidden-xs">
+            <a href="#" data-toggle="sidebar">
+                <i class="fa-bars"></i>
+            </a>
+        </li>
+        <li class="dropdown hover-line language-switcher">
+            <a href={`${baseUrl}/`} class="dropdown-toggle" data-toggle="dropdown">
+                <img src="/assets/images/flags/flag-cn.png" alt="flag-cn" /> {t.currentLang}
+            </a>
+            <ul class="dropdown-menu languages">
+                <li>
+                    <a href="/en/">
+                        <img src="/assets/images/flags/flag-us.png" alt="flag-us" /> English
+                    </a>
+                </li>
+                <li class={lang === 'zh' ? 'active' : ''}>
+                    <a href="/cn/">
+                        <img src="/assets/images/flags/flag-cn.png" alt="flag-cn" /> Chinese
+                    </a>
+                </li>
+            </ul>
+        </li>
+    </ul>
+    <ul class="user-info-menu right-links list-inline list-unstyled">
+        <li class="hidden-sm hidden-xs">
+            <a href="https://github.com/WebStackPage/WebStackPage.github.io" target="_blank">
+                <i class="fa-github"></i> {t.github}
+            </a>
+        </li>
+    </ul>
+</nav>
