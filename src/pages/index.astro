@@ -1,21 +1,33 @@
 ---
+import { siteUrl } from '../lib/i18n';
 ---
+
 <!DOCTYPE html>
 <html lang="zh">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>WebStack.cc - 设计师网址导航</title>
-    <link rel="shortcut icon" href="./assets/images/favicon.png">
+    <link rel="canonical" href={`${siteUrl}/`} />
+    <link rel="icon" href="/assets/images/favicon.png" />
     <script is:inline>
-    var language = navigator.language || navigator.browserLanguage;
-    if (language.indexOf("en") > -1) {
-        document.location.href = "/en/";
-    } else if (language.indexOf("zh") > -1) {
-        document.location.href = "/cn/";
-    } else {
-        document.location.href = "/en/";
-    }
+      (function () {
+        var langs = navigator.languages || [navigator.language || ''];
+        var first = String(langs[0] || '').toLowerCase();
+        window.location.replace(first.indexOf('zh') === 0 ? '/cn/' : '/en/');
+      })();
     </script>
-</head>
+  </head>
+  <body>
+    <noscript>
+      <p>Please choose a language / 请选择语言：</p>
+      <ul>
+        <li><a href="/cn/">中文</a></li>
+        <li><a href="/en/">English</a></li>
+      </ul>
+    </noscript>
+    <p>
+      <a href="/cn/">中文</a> · <a href="/en/">English</a>
+    </p>
+  </body>
 </html>

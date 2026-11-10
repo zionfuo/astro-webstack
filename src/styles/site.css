@@ -1,0 +1,46 @@
+/* 站点补丁样式：由 Astro 打包压缩，随 layout 一并输出。 */
+
+/* 卡片整块可点击：真实链接覆盖 .xe-widget（其本身已有 position: relative）。
+   这样保持原有 DOM 与 Xenon 样式不变，同时支持键盘、右键与新标签页。 */
+.xe-widget > .xe-widget-link {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  border-radius: inherit;
+}
+
+/* Xenon 的 a { outline: 0 !important } 会吞掉默认焦点框，这里显式保证键盘可见 */
+.xe-widget > .xe-widget-link:focus-visible {
+  outline: 2px solid #4a89dc !important;
+  outline-offset: 2px;
+}
+
+/* 标题原本是 <a>，继承 bootstrap 的 a { color:#373e4a }；改为 span 后固定同色 */
+.xe-widget.xe-conversations .xe-user-name {
+  color: #373e4a;
+}
+
+/* 图标文件缺失时的文字占位（原中文首页有 3 个站点图标不存在） */
+.logo-fallback {
+  float: left;
+  display: block;
+  width: 40px;
+  height: 40px;
+  line-height: 40px;
+  text-align: center;
+  border-radius: 50%;
+  background: #eef2f7;
+  color: #5b6470;
+  font-size: 16px;
+  font-weight: 700;
+}
+
+/* 锚点跳转留出顶部导航高度 */
+h4.text-gray[id] {
+  scroll-margin-top: 75px;
+}
+
+/* 弱化空标签占位（原模板残留，无文字内容） */
+.xe-comment-entry > .label-info:empty {
+  pointer-events: none;
+}

@@ -1,0 +1,32 @@
+---
+import LinkCard from './LinkCard.astro';
+import type { LinkSection } from '../data/links';
+import type { Lang } from '../lib/i18n';
+
+interface Props {
+  section: LinkSection;
+  lang: Lang;
+}
+
+const { section, lang } = Astro.props;
+const title = lang === 'zh' ? section.titleZh ?? section.title : section.title;
+const rows = section.rows
+  .map((row) => row.filter((link) => lang === 'zh' || !link.zhOnly))
+  .filter((row) => row.length > 0);
+---
+
+<h4 class="text-gray">
+  <i class={section.icon} style="margin-right: 7px;" id={section.id}></i>{title}
+</h4>
+{
+  rows.map((row) => (
+    <div class="row">
+      {row.map((link) => (
+        <div class="col-sm-3">
+          <LinkCard link={link} />
+        </div>
+      ))}
+    </div>
+  ))
+}
+<br />

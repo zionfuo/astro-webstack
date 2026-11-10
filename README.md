@@ -1,39 +1,46 @@
 # Astro Webstack
 
-> 🧑‍🚀 This is the Astro port of WebStackPage. Special thanks to https://github.com/WebStackPage/WebStackPage.github.io and to the [Trae](https://www.trae.cn/) for its support.
+WebStackPage 的 Astro 移植版。静态站，中文 `/cn/`、英文 `/en/`，根路径按浏览器语言跳转。
 
-## 🚀 Project Structure
+原项目：<https://github.com/WebStackPage/WebStackPage.github.io>
 
-Inside of your Astro project, you'll see the following folders and files:
+## 项目结构
 
 ```text
-/
-├── public/
-├── src/
-│   └── pages/
-│       └── index.astro
-└── package.json
+src/
+  data/links.ts          全部分区与卡片，唯一内容数据源
+  data/navigation.ts     侧栏分组 -> 分区 id 映射
+  lib/i18n.ts            界面文案、站点 URL、语言路径
+  layouts/MainLayout.astro  <head>、样式与脚本
+  components/            LinkCard / LinkSection / Sidebar / Navbar / SiteFooter / HomePage / AboutPage
+  pages/                 5 个路由入口，只做语言参数分发
+  styles/site.css        组件补丁样式，由 Astro 打包
+public/assets/           第三方 CSS / JS、图片
+design/                  webstack_logos.sketch 设计源文件，不参与发布
 ```
 
-Astro looks for `.astro` or `.md` files in the `src/pages/` directory. Each page is exposed as a route based on its file name.
+## 维护内容
 
-There's nothing special about `src/components/`, but that's where we like to put any Astro/React/Vue/Svelte/Preact components.
+新增或修改网址只改 `src/data/links.ts`。`rows` 保留每行卡片的分组（避免版式变化）；
+`titleZh` 是中文版分区标题，未配置时沿用英文标题；`zhOnly` 条目只在中文版显示；
+`logo` 为 `null` 时渲染文字占位图标（原中文首页有 3 个站点缺少图标文件）。
 
-Any static assets, like images, can be placed in the `public/` directory.
+侧栏菜单从同一份数据生成，锚点与页面分区 id 一致。
 
-## 🧞 Commands
+## 命令
 
-All commands are run from the root of the project, from a terminal:
+| 命令 | 作用 |
+| :--- | :--- |
+| `npm install` | 安装依赖 |
+| `npm run dev` | 本地开发，`localhost:4321` |
+| `npm run build` | 构建到 `./dist/` |
+| `npm run preview` | 预览构建产物 |
+| `npm run check` | `astro check` 类型与模板检查 |
+| `npm run lint` | ESLint（扁平配置） |
+| `npm run format` | Prettier 格式化源码与配置 |
 
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
+## 环境变量
 
-## 👀 Want to learn more?
-
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+复制 `.env.example` 为 `.env`。`PUBLIC_GA_ID`、`PUBLIC_BAIDU_HM_ID`、`PUBLIC_AD_CLIENT`
+均为可选，留空则不加载任何第三方统计脚本。GA 只接受 `G-` 开头的 GA4 衡量 ID，
+旧的 `UA-` 格式已停用。

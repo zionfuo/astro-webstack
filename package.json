@@ -1,18 +1,23 @@
 {
-  "name": "nasty-nova",
+  "name": "astro-webstack",
   "type": "module",
   "version": "0.0.1",
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
+    "check": "astro check",
+    "lint": "eslint .",
+    "format": "prettier --write \"src/**/*.{ts,css}\" astro.config.mjs eslint.config.js README.md",
     "astro": "astro"
   },
   "dependencies": {
     "astro": "^5.16.0"
   },
   "devDependencies": {
+    "@astrojs/check": "^0.9.12",
     "eslint": "^10.4.0",
-    "prettier": "^3.8.3"
+    "prettier": "^3.8.3",
+    "typescript": "^5.9.3"
   }
 }

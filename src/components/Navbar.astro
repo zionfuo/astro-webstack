@@ -1,44 +1,49 @@
 ---
-const { lang = 'zh', baseUrl = '/cn' } = Astro.props;
+import { ui } from '../lib/i18n';
+import type { Lang } from '../lib/i18n';
 
-const labels = {
-  zh: { github: 'GitHub', currentLang: 'Chinese' },
-  en: { github: 'GitHub', currentLang: 'English' },
-};
+interface Props {
+  lang?: Lang;
+}
 
-const t = labels[lang] || labels.zh;
+const { lang = 'zh' } = Astro.props;
+const t = ui[lang];
 ---
 
 <nav class="navbar user-info-navbar" role="navigation">
-    <ul class="user-info-menu left-links list-inline list-unstyled">
-        <li class="hidden-sm hidden-xs">
-            <a href="#" data-toggle="sidebar">
-                <i class="fa-bars"></i>
-            </a>
+  <ul class="user-info-menu left-links list-inline list-unstyled">
+    <li class="hidden-sm hidden-xs">
+      <a href="#" data-toggle="sidebar" aria-label="Toggle sidebar">
+        <i class="fa-bars"></i>
+      </a>
+    </li>
+    <li class="dropdown hover-line language-switcher">
+      <a href={t.otherPath} class="dropdown-toggle" data-toggle="dropdown">
+        <img src={t.currentFlag} width="18" height="12" alt="" /> {t.currentLang}
+      </a>
+      <ul class="dropdown-menu languages">
+        <li class={lang === 'en' ? 'active' : ''}>
+          <a href="/en/">
+            <img src="/assets/images/flags/flag-us.png" width="18" height="12" alt="" /> English
+          </a>
         </li>
-        <li class="dropdown hover-line language-switcher">
-            <a href={`${baseUrl}/`} class="dropdown-toggle" data-toggle="dropdown">
-                <img src="/assets/images/flags/flag-cn.png" alt="flag-cn" /> {t.currentLang}
-            </a>
-            <ul class="dropdown-menu languages">
-                <li>
-                    <a href="/en/">
-                        <img src="/assets/images/flags/flag-us.png" alt="flag-us" /> English
-                    </a>
-                </li>
-                <li class={lang === 'zh' ? 'active' : ''}>
-                    <a href="/cn/">
-                        <img src="/assets/images/flags/flag-cn.png" alt="flag-cn" /> Chinese
-                    </a>
-                </li>
-            </ul>
+        <li class={lang === 'zh' ? 'active' : ''}>
+          <a href="/cn/">
+            <img src="/assets/images/flags/flag-cn.png" width="18" height="12" alt="" /> Chinese
+          </a>
         </li>
-    </ul>
-    <ul class="user-info-menu right-links list-inline list-unstyled">
-        <li class="hidden-sm hidden-xs">
-            <a href="https://github.com/WebStackPage/WebStackPage.github.io" target="_blank">
-                <i class="fa-github"></i> {t.github}
-            </a>
-        </li>
-    </ul>
+      </ul>
+    </li>
+  </ul>
+  <ul class="user-info-menu right-links list-inline list-unstyled">
+    <li class="hidden-sm hidden-xs">
+      <a
+        href="https://github.com/WebStackPage/WebStackPage.github.io"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        <i class="fa-github"></i> {t.github}
+      </a>
+    </li>
+  </ul>
 </nav>

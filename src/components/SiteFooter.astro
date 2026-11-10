@@ -1,0 +1,28 @@
+---
+import { ui } from '../lib/i18n';
+import type { Lang } from '../lib/i18n';
+
+interface Props {
+  lang: Lang;
+  baseUrl: string;
+}
+
+const { lang, baseUrl } = Astro.props;
+const year = new Date().getFullYear();
+---
+
+<footer class="main-footer sticky footer-type-1">
+  <div class="footer-inner">
+    <div class="footer-text">
+      &copy; 2017-{year}
+      <a href={`${baseUrl}/about/`}><strong>WebStack</strong></a>
+      {ui[lang].footerDesignBy}
+      <a href="https://www.viggoz.com" target="_blank" rel="noopener noreferrer"><strong>Viggo</strong></a>
+    </div>
+    <div class="go-up">
+      <a href="#" rel="go-top" aria-label="Back to top">
+        <i class="fa-angle-up"></i>
+      </a>
+    </div>
+  </div>
+</footer>

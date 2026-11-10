@@ -1,91 +1,123 @@
 ---
+import '../styles/site.css';
+import { ui, siteUrl, alternatePaths } from '../lib/i18n';
+import type { Lang } from '../lib/i18n';
+
+interface Props {
+  lang?: Lang;
+  title?: string;
+  description?: string;
+}
+
 const {
   lang = 'zh',
-  gaId = import.meta.env.PUBLIC_GA_ID || 'UA-111463289-1',
-  baiduHmId = import.meta.env.PUBLIC_BAIDU_HM_ID || 'c05bb16ea908292af9f6c513087a1cc3',
-  adClient = import.meta.env.PUBLIC_AD_CLIENT || 'ca-pub-8550836177608334',
+  title = ui[lang].homeTitle,
+  description = ui[lang].description,
 } = Astro.props;
+
+const path = Astro.url.pathname;
+const canonical = new URL(path, siteUrl).href;
+const alternates = alternatePaths(path);
+
+// UA- 开头的 Universal Analytics 已于 2023 年停止处理数据，这里只接受 GA4 衡量 ID。
+const gaId = import.meta.env.PUBLIC_GA_ID ?? '';
+const useGa4 = /^G-[A-Z0-9]+$/.test(gaId);
+const baiduHmId = import.meta.env.PUBLIC_BAIDU_HM_ID ?? '';
+const adClient = import.meta.env.PUBLIC_AD_CLIENT ?? '';
 ---
 
 <!DOCTYPE html>
 <html lang={lang}>
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WebStack.cc - 设计师网址导航</title>
-    <link rel="shortcut icon" href="/assets/images/favicon.png">
-    <link rel="stylesheet" href="/assets/css/bootstrap.css">
-    <link rel="stylesheet" href="/assets/css/nav.css">
-    <link rel="stylesheet" href="/assets/css/xenon-components.css">
-    <link rel="stylesheet" href="/assets/css/xenon-core.css">
-    <link rel="stylesheet" href="/assets/css/xenon-forms.css">
-    <link rel="stylesheet" href="/assets/css/xenon-skins.css">
-    <link rel="stylesheet" href="/assets/css/xenon.css">
-    <link rel="stylesheet" href="/assets/css/fonts/elusive/css/elusive.css">
-    <link rel="stylesheet" href="/assets/css/fonts/fontawesome/css/font-awesome.min.css">
-    <link rel="stylesheet" href="/assets/css/fonts/linecons/css/linecons.css">
-    <link rel="stylesheet" href="/assets/css/fonts/meteocons/css/meteocons.css">
-    <script is:inline src="/assets/js/jquery-1.11.1.min.js"></script>
-    <script is:inline src="/assets/js/bootstrap.min.js"></script>
-    <script is:inline>
-        $(document).ready(function() {
-            $('.dropdown-toggle').dropdown();
-            $('.smooth').click(function(e) {
-                e.preventDefault();
-                var target = $(this).attr('href');
-                if (target.startsWith('#')) {
-                    $('html, body').animate({ scrollTop: $(target).offset().top - 75 }, 800);
-                }
-            });
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <link rel="alternate" hreflang="zh" href={new URL(alternates.zh, siteUrl).href} />
+    <link rel="alternate" hreflang="en" href={new URL(alternates.en, siteUrl).href} />
+    <link rel="alternate" hreflang="x-default" href={`${siteUrl}/`} />
+    <link rel="icon" href="/assets/images/favicon.png" />
+
+    <link rel="stylesheet" href="/assets/css/bootstrap.css" />
+    <link rel="stylesheet" href="/assets/css/nav.css" />
+    <link rel="stylesheet" href="/assets/css/xenon-components.css" />
+    <link rel="stylesheet" href="/assets/css/xenon-core.css" />
+    <link rel="stylesheet" href="/assets/css/xenon-forms.css" />
+    <link rel="stylesheet" href="/assets/css/xenon-skins.css" />
+    <link rel="stylesheet" href="/assets/css/xenon.css" />
+    <link rel="stylesheet" href="/assets/css/fonts/fontawesome/css/font-awesome.min.css" />
+    <link rel="stylesheet" href="/assets/css/fonts/linecons/css/linecons.css" />
+
+    {/* defer 保证按文档顺序执行，且不再阻塞 HTML 解析 */}
+    <script is:inline defer src="/assets/js/jquery-1.11.1.min.js"></script>
+    <script is:inline defer src="/assets/js/bootstrap.min.js"></script>
+    <script is:inline defer src="/assets/js/TweenMax.min.js"></script>
+    <script is:inline defer src="/assets/js/joinable.js"></script>
+    <script is:inline defer src="/assets/js/resizeable.js"></script>
+    <script is:inline defer src="/assets/js/xenon-api.js"></script>
+    <script is:inline defer src="/assets/js/xenon-custom.js"></script>
+    <script is:inline defer src="/assets/js/xenon-toggles.js"></script>
+
+    {/* 由 Astro 打包：替代原页面里重复的 jQuery 平滑滚动与 lozad 初始化 */}
+    <script>
+      document.querySelectorAll<HTMLAnchorElement>('a.smooth[href^="#"]').forEach((link) => {
+        link.addEventListener('click', (event) => {
+          const hash = link.getAttribute('href');
+          if (!hash || hash === '#') return;
+          const target = document.querySelector(hash);
+          if (!target) return;
+          event.preventDefault();
+          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          document
+            .querySelectorAll('.mobile-is-visible')
+            .forEach((el) => el.classList.remove('mobile-is-visible'));
         });
+      });
     </script>
-    <script is:inline src="/assets/js/TweenMax.min.js"></script>
-    <script is:inline src="/assets/js/joinable.js"></script>
-    <script is:inline src="/assets/js/resizeable.js"></script>
-    <script is:inline src="/assets/js/lozad.js"></script>
-    <script is:inline>
-        document.addEventListener('DOMContentLoaded', function() {
-            const observer = lozad();
-            observer.observe();
-        });
-    </script>
-    <script is:inline src="/assets/js/xenon-api.js"></script>
-    <script is:inline src="/assets/js/xenon-custom.js"></script>
-    <script is:inline src="/assets/js/xenon-toggles.js"></script>
-    <!--
-        SRI (Subresource Integrity) Note:
-        Third-party tracking scripts (GA, Baidu, AdSense) are loaded dynamically
-        via inline script to handle variable IDs. For enhanced security, consider:
-        1. Using a CSP with 'strict-dynamic' for script sources
-        2. Deploying these through your own CDN with SRI hashes
-        3. Using service workers to validate external resources
-    -->
-    <script is:inline async src={`https://www.googletagmanager.com/gtag/js?id=${gaId}`}></script>
-    <script is:inline>
-        window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
-        gtag('js', new Date());
-        gtag('config', `${gaId}`);
-    </script>
-    <script is:inline>
+
+    <slot name="head" />
+  </head>
+  <body>
+    <slot />
+
+    {/* 第三方统计放在内容之后，且只在配置了对应 ID 时加载 */}
+    {useGa4 && (
+      <>
+        <script is:inline async src={`https://www.googletagmanager.com/gtag/js?id=${gaId}`}></script>
+        <script is:inline define:vars={{ gaId }}>
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', gaId);
+        </script>
+      </>
+    )}
+    {baiduHmId && (
+      <script is:inline define:vars={{ baiduHmId }}>
         var _hmt = _hmt || [];
         (function() {
-            var hm = document.createElement("script");
-            hm.src = `https://hm.baidu.com/hm.js?${baiduHmId}`;
-            var s = document.getElementsByTagName("script")[0];
-            s.parentNode.insertBefore(hm, s);
+          var hm = document.createElement('script');
+          hm.src = 'https://hm.baidu.com/hm.js?' + baiduHmId;
+          var s = document.getElementsByTagName('script')[0];
+          s.parentNode.insertBefore(hm, s);
         })();
-    </script>
-    <script is:inline async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-    <script is:inline>
-        (adsbygoogle = window.adsbygoogle || []).push({
-            google_ad_client: `${adClient}`,
+      </script>
+    )}
+    {adClient && (
+      <>
+        <script is:inline async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+        <script is:inline define:vars={{ adClient }}>
+          (adsbygoogle = window.adsbygoogle || []).push({
+            google_ad_client: adClient,
             enable_page_level_ads: true
-        });
-    </script>
-    <slot name="head"></slot>
-</head>
-<body>
-    <slot></slot>
-</body>
+          });
+        </script>
+      </>
+    )}
+  </body>
 </html>

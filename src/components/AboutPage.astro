@@ -1,0 +1,71 @@
+---
+import MainLayout from '../layouts/MainLayout.astro';
+import { ui, baseUrlFor } from '../lib/i18n';
+import type { Lang } from '../lib/i18n';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const baseUrl = baseUrlFor(lang);
+const t = ui[lang];
+---
+
+<MainLayout lang={lang} title={t.aboutTitle}>
+  <nav class="navbar horizontal-menu navbar-fixed-top">
+    <div class="navbar-inner">
+      <div class="navbar-brand">
+        <a href={`${baseUrl}/`} class="logo">
+          <img
+            src="/assets/images/logo_dark@2x.png"
+            width="100%"
+            alt="WebStack"
+            class="hidden-xs"
+          />
+          <img
+            src="/assets/images/logo@2x.png"
+            width="100%"
+            alt="WebStack"
+            class="visible-xs"
+          />
+        </a>
+      </div>
+      <div class="navbar-mobile-clear"></div>
+      <a
+        href="https://github.com/WebStackPage/WebStackPage.github.io"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        <img
+          style="position: absolute; top: 0; right: 0; border: 0;"
+          src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png"
+          alt="Fork me on GitHub"
+          loading="lazy"
+        />
+      </a>
+    </div>
+  </nav>
+  <div class="page-container">
+    <div class="main-content">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="panel panel-default">
+            <h4 class="text-gray">{t.aboutHeading}</h4>
+            <div class="panel-body">
+              <div class="row">
+                <div class="col-sm-12">
+                  <blockquote>
+                    <p>{t.aboutParagraphs[0]}</p>
+                    <br />
+                    <p>{t.aboutParagraphs[1]}</p>
+                  </blockquote>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</MainLayout>

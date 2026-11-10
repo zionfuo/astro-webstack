@@ -1,0 +1,28 @@
+---
+import MainLayout from '../layouts/MainLayout.astro';
+import Sidebar from './Sidebar.astro';
+import Navbar from './Navbar.astro';
+import LinkSection from './LinkSection.astro';
+import SiteFooter from './SiteFooter.astro';
+import { sections } from '../data/links';
+import { ui, baseUrlFor } from '../lib/i18n';
+import type { Lang } from '../lib/i18n';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const baseUrl = baseUrlFor(lang);
+---
+
+<MainLayout lang={lang} title={ui[lang].homeTitle}>
+  <div class="page-container">
+    <Sidebar lang={lang} baseUrl={baseUrl} />
+    <div class="main-content">
+      <Navbar lang={lang} />
+      {sections.map((section) => <LinkSection section={section} lang={lang} />)}
+      <SiteFooter lang={lang} baseUrl={baseUrl} />
+    </div>
+  </div>
+</MainLayout>

@@ -1,146 +1,77 @@
 ---
+import { sections } from '../data/links';
+import { navGroups } from '../data/navigation';
+import { ui } from '../lib/i18n';
+import type { Lang } from '../lib/i18n';
+
+interface Props {
+  lang?: Lang;
+  baseUrl?: string;
+}
+
 const { lang = 'zh', baseUrl = '/cn' } = Astro.props;
+const byId = new Map(sections.map((section) => [section.id, section]));
 
-const zhMenu = [
-  { id: '常用推荐', icon: 'star', label: '常用推荐' },
-  { id: '社区资讯', icon: 'doc', label: '社区资讯' },
-];
-
-const enMenu = [
-  { id: '常用推荐', icon: 'star', label: '常用推荐' },
-  { id: '社区资讯', icon: 'doc', label: '社区资讯' },
-];
-
-const subMenus = {
-  zh: [
-    { id: '灵感采集', icon: 'lightbulb', label: '灵感采集', items: [
-      { id: '发现产品', label: '发现产品' },
-      { id: '界面灵感', label: '界面灵感' },
-      { id: '图标灵感', label: '图标灵感' },
-      { id: '配色灵感', label: '配色灵感' },
-      { id: '排版灵感', label: '排版灵感' },
-      { id: '插画灵感', label: '插画灵感' },
-      { id: '动效灵感', label: '动效灵感' },
-    ]},
-    { id: '素材资源', icon: 'thumbs-up', label: '素材资源', items: [
-      { id: '设计素材', label: '设计素材' },
-      { id: '图片素材', label: '图片素材' },
-      { id: '图标素材', label: '图标素材' },
-      { id: '字体资源', label: '字体资源' },
-      { id: '配色资源', label: '配色资源' },
-      { id: '音频资源', label: '音频资源' },
-      { id: '视频资源', label: '视频资源' },
-    ]},
-    { id: '常用工具', icon: 'diamond', label: '常用工具', items: [
-      { id: '设计工具', label: '设计工具' },
-      { id: '开发工具', label: '开发工具' },
-      { id: '在线工具', label: '在线工具' },
-      { id: '浏览器插件', label: '浏览器插件' },
-      { id: '效率工具', label: '效率工具' },
-    ]},
-    { id: '学习教程', icon: 'pencil', label: '学习教程', items: [
-      { id: '设计教程', label: '设计教程' },
-      { id: '开发教程', label: '开发教程' },
-      { id: '设计书籍', label: '设计书籍' },
-      { id: '开发书籍', label: '开发书籍' },
-    ]},
-  ],
-  en: [
-    { id: '灵感采集', icon: 'lightbulb', label: 'Inspiration', items: [
-      { id: 'discover-products', label: 'Discover Products' },
-      { id: 'ui-inspiration', label: 'UI Inspiration' },
-      { id: 'web-design', label: 'Web Design', labelExtra: 'Hot' },
-      { id: 'mobile-design', label: 'Mobile Design' },
-      { id: 'illustrations', label: 'Illustrations' },
-      { id: 'infographics', label: 'Infographics' },
-      { id: 'fonts', label: 'Fonts' },
-    ]},
-    { id: '素材资源', icon: 'thumbs-up', label: 'Resources', items: [
-      { id: 'icons', label: 'Icons' },
-      { id: 'logo', label: 'Logo' },
-      { id: 'graphic', label: 'Graphic' },
-      { id: 'ui-kits', label: 'UI Kits' },
-      { id: 'sketch', label: 'Sketch' },
-      { id: 'fonts', label: 'Fonts' },
-      { id: 'mockup', label: 'Mockup' },
-      { id: 'stock', label: 'Stock' },
-      { id: 'ppt', label: 'PPT' },
-    ]},
-    { id: '常用工具', icon: 'diamond', label: 'Tools', items: [
-      { id: 'graphic-design', label: 'Graphic Design' },
-      { id: 'ui-design', label: 'UI Design' },
-      { id: 'motion', label: 'Motion' },
-      { id: 'color', label: 'Color' },
-      { id: 'online', label: 'Online' },
-      { id: 'chrome', label: 'Chrome' },
-    ]},
-    { id: '学习教程', icon: 'pencil', label: 'Learn', items: [
-      { id: 'guidelines', label: 'Guidelines' },
-      { id: 'tutorials', label: 'Tutorials' },
-      { id: 'articles', label: 'Articles' },
-      { id: 'podcast', label: 'Podcast' },
-      { id: 'ux', label: 'UX', labelExtra: 'Hot' },
-    ]},
-  ],
-};
-
-const menu = lang === 'en' ? enMenu : zhMenu;
-const subMenuList = subMenus[lang] || subMenus.zh;
+// 菜单项直接引用内容分区的 id，锚点不会失效；同名分区只保留首个入口。
+const groups = navGroups.map((group) => ({
+  ...group,
+  items: group.sections
+    .map((id) => byId.get(id))
+    .filter((section) => section !== undefined)
+    .map((section) => ({
+      id: section.id,
+      label: lang === 'zh' ? section.titleZh ?? section.title : section.title,
+    }))
+    .filter((item, index, all) => all.findIndex((x) => x.label === item.label) === index),
+}));
 ---
 
 <div class="sidebar-menu toggle-others fixed">
-    <div class="sidebar-menu-inner">
-        <header class="logo-env">
-            <div class="logo">
-                <a href={`${baseUrl}/`} class="logo-expanded">
-                    <img src="/assets/images/logo@2x.png" width="100%" alt="" />
-                </a>
-                <a href={`${baseUrl}/`} class="logo-collapsed">
-                    <img src="/assets/images/logo-collapsed@2x.png" width="40" alt="" />
-                </a>
-            </div>
-            <div class="mobile-menu-toggle visible-xs">
-                <a href="#" data-toggle="user-info-menu">
-                    <i class="linecons-cog"></i>
-                </a>
-                <a href="#" data-toggle="mobile-menu">
-                    <i class="fa-bars"></i>
-                </a>
-            </div>
-        </header>
-        <ul id="main-menu" class="main-menu">
-            {menu.map(item => (
+  <div class="sidebar-menu-inner">
+    <header class="logo-env">
+      <div class="logo">
+        <a href={`${baseUrl}/`} class="logo-expanded">
+          <img src="/assets/images/logo@2x.png" width="100%" alt="WebStack" />
+        </a>
+        <a href={`${baseUrl}/`} class="logo-collapsed">
+          <img src="/assets/images/logo-collapsed@2x.png" width="40" alt="WebStack" />
+        </a>
+      </div>
+      <div class="mobile-menu-toggle visible-xs">
+        <a href="#" data-toggle="user-info-menu" aria-label="Menu">
+          <i class="linecons-cog"></i>
+        </a>
+        <a href="#" data-toggle="mobile-menu" aria-label="Menu">
+          <i class="fa-bars"></i>
+        </a>
+      </div>
+    </header>
+    <ul id="main-menu" class="main-menu">
+      {
+        groups.map((group) => (
+          <li>
+            <a>
+              <i class={`linecons-${group.icon}`}></i>
+              <span class="title">{group.title[lang]}</span>
+            </a>
+            <ul>
+              {group.items.map((item) => (
                 <li>
-                    <a href={`#${item.id}`} class="smooth">
-                        <i class={`linecons-${item.icon}`}></i>
-                        <span class="title">{item.label}</span>
-                    </a>
+                  <a href={`#${item.id}`} class="smooth">
+                    <span class="title">{item.label}</span>
+                  </a>
                 </li>
-            ))}
-            {subMenuList.map(subMenu => (
-                <li>
-                    <a>
-                        <i class={`linecons-${subMenu.icon}`}></i>
-                        <span class="title">{subMenu.label}</span>
-                    </a>
-                    <ul>
-                        {subMenu.items.map(item => (
-                            <li>
-                                <a href={`#${item.id}`} class="smooth">
-                                    <span class="title">{item.label}</span>
-                                    {item.labelExtra && <span class={`label label-pink pull-right hidden-collapsed`}>{item.labelExtra}</span>}
-                                </a>
-                            </li>
-                        ))}
-                    </ul>
-                </li>
-            ))}
-            <li>
-                <a href={`${baseUrl}/about/`} class="smooth">
-                    <i class="linecons-heart"></i>
-                    <span class="title">{lang === 'en' ? 'About ♥︎' : '关于本站♥︎'}</span>
-                </a>
-            </li>
-        </ul>
-    </div>
+              ))}
+            </ul>
+          </li>
+        ))
+      }
+      <li>
+        <a href={`${baseUrl}/about/`}>
+          <i class="linecons-heart"></i>
+          <span class="title">{ui[lang].about}</span>
+        </a>
+      </li>
+    </ul>
+  </div>
 </div>
